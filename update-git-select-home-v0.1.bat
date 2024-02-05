@@ -1,0 +1,48 @@
+@echo off
+
+rem Lendo o token do arquivo
+set /p TOKEN=<C:\XXXX\token.txt
+
+rem Configurações de usuário e e-mail do Git
+git config --global user.email "alan_mugiwara@hotmail.com"
+git config --global user.name "Alan Cruz"
+
+rem Vá para a pasta raiz que contém os repositórios
+cd /d "C:\XXX\XXX\SEU-REPOSITORIO-LOCAL"
+
+rem Verifica se o diretório é um repositório Git válido
+if not exist .git (
+    echo Inicializando repositório Git para: SEU-REPOSITORIO-LOCAL
+    git init
+)
+
+rem Remove o controle remoto existente, se houver
+git remote remove origin
+
+rem Configura o repositório remoto com suas credenciais e token
+git remote add origin https://SEU-USER:%TOKEN%@github.com/SEU-USER/SEU-REPOSITORIO-REMOTO.git
+
+rem Atualiza o repositório a partir do branch main do repositório remoto
+git pull origin main
+
+rem Verifica se o comando git pull teve sucesso
+if %errorlevel% neq 0 (
+    echo Falha ao atualizar o repositório: SEU-REPOSITORIO-REMOTO
+) else (
+    echo Repositório atualizado com sucesso: SEU-REPOSITORIO-REMOTO
+)
+
+rem Adiciona todas as alterações locais ao stage
+git add .
+
+rem Commita as alterações com uma mensagem específica
+git commit -m "xxx | alan-home script"
+
+rem Renomeia o branch atual para main
+git branch -M main
+
+rem Força o push das alterações locais para o repositório remoto no branch main
+git push -u --force origin main
+
+rem Mantém a janela aberta para visualização dos resultados
+pause
